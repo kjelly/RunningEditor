@@ -48,6 +48,13 @@ def catch_local_vars(code, env=None, stop=-1):
 
     if stop >= 0:
         lines = code.split('\n')
+        while stop > 0:
+            if len(lines[stop].strip()) == 0:
+                stop -= 1
+            elif lines[stop][-1] == ':':
+                stop -= 1
+            else:
+                break
         lines[stop] = lines[stop] + ';raise MyException("xx")'
         code ='\n'.join(lines)
         env['MyException'] = MyException
