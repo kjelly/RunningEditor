@@ -15,8 +15,9 @@ RunningEditor
 
 範例程式
 =============
-如果你在寫 function 的話，記得呼叫該 function。如
-該範例最後一行的 fun()
+在主要視窗輸入以下程式碼
+
+
 ~~~python
 def fun():
  a = 1
@@ -24,5 +25,14 @@ def fun():
  c = a + 1
  import urllib
  
-fun()
+
+~~~
+
+
+在 Test Code 視窗呼叫你正在寫的 function。必要時你可以使用 mock，避免 side effect。
+
+以上面的例子來說，你要在 Test Code 視窗輸入下面的程式碼
+
+~~~python
+test()
 ~~~
