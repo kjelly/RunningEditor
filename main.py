@@ -18,13 +18,15 @@ class MainWindow(QtGui.QMainWindow):
         self.test_code_docker = QtGui.QDockWidget("Test Code", self)
         self.test_code_editor = QtGui.QTextEdit(self.test_code_docker)
         self.test_code_docker.setWidget(self.test_code_editor)
-        self.addDockWidget(QtCore.Qt.RightDockWidgetArea, self.test_code_docker)
+        self.addDockWidget(QtCore.Qt.RightDockWidgetArea,
+                           self.test_code_docker)
 
         self.local_vars_docker = QtGui.QDockWidget("Local vars", self)
         self.local_vars_view = QtGui.QTextEdit(self.local_vars_docker)
         self.local_vars_view.setReadOnly(True)
         self.local_vars_docker.setWidget(self.local_vars_view)
-        self.addDockWidget(QtCore.Qt.RightDockWidgetArea, self.local_vars_docker)
+        self.addDockWidget(QtCore.Qt.RightDockWidgetArea,
+                           self.local_vars_docker)
 
         self.error_docker = QtGui.QDockWidget("error", self)
         self.error_view = QtGui.QTextEdit(self.error_docker)
@@ -50,7 +52,6 @@ def main():
 
     ex = MainWindow()
     ex.show()
-
 
     sys.exit(app.exec_())
 

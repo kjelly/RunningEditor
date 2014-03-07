@@ -23,9 +23,10 @@ def try_copy(data):
 
 
 def convert_stack_to_dict(stack):
-    keys = ['frame', 'file_name','line_number','function_name','codes','index']
+    keys = ['frame', 'file_name', 'line_number',
+            'function_name', 'codes', 'index']
     ret = {}
-    for i,value in enumerate(stack):
+    for i, value in enumerate(stack):
         ret[keys[i]] = value
     return ret
 
@@ -36,7 +37,6 @@ class MyException(Exception):
         stack = inspect.stack()[1]
         frame = convert_stack_to_dict(stack)['frame']
         self.local_vars = try_copy(frame.f_locals)
-
 
     def __str__(self):
         return str(self.local_vars)
@@ -56,7 +56,7 @@ def catch_local_vars(code, env=None, stop=-1):
             else:
                 break
         lines[stop] = lines[stop] + ';raise MyException("xx")'
-        code ='\n'.join(lines)
+        code = '\n'.join(lines)
         env['MyException'] = MyException
 
     try:
