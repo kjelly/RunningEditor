@@ -2,10 +2,10 @@ import sys
 from PySide import QtGui, QtCore
 
 
-class Edit(QtGui.QTextEdit):
+class SimpleTextEdit(QtGui.QTextEdit):
 
     def __init__(self):
-        super(Edit, self).__init__()
+        super(SimpleTextEdit, self).__init__()
         self.initUI()
         self.key_enter_callback_list = []
 
@@ -21,14 +21,14 @@ class Edit(QtGui.QTextEdit):
             return True
 
 
-        return super(Edit, self).keyPressEvent(event)
+        return super(SimpleTextEdit, self).keyPressEvent(event)
 
     def add_ener_callback(self, callback):
         self.key_enter_callback_list.append(callback)
 
     def keyReleaseEvent(self, event):
 
-        return super(Edit, self).keyReleaseEvent(event)
+        return super(SimpleTextEdit, self).keyReleaseEvent(event)
 
     def indent(self):
         text = self.toPlainText()
@@ -45,7 +45,7 @@ class Edit(QtGui.QTextEdit):
 def main():
 
     app = QtGui.QApplication(sys.argv)
-    ex = Edit()
+    ex = SimpleTextEdit()
     sys.exit(app.exec_())
 
 

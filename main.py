@@ -1,6 +1,7 @@
 import sys
 from PySide import QtGui, QtCore
-from edit import Edit
+
+from TextEdit import Editor
 from core import catch_local_vars
 
 
@@ -8,7 +9,7 @@ class MainWindow(QtGui.QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
 
-        self.main_editor = Edit()
+        self.main_editor = Editor()
         self.main_editor.add_ener_callback(self.catch_local_vars)
         self.setCentralWidget(self.main_editor)
         self.createDockWindows()
