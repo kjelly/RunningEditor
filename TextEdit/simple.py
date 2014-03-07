@@ -10,7 +10,6 @@ class SimpleTextEdit(QtGui.QTextEdit):
         self.key_enter_callback_list = []
 
     def initUI(self):
-        self.show()
         self.setText("")
 
     def keyPressEvent(self, event):

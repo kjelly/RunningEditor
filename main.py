@@ -1,7 +1,7 @@
 import sys
 from PySide import QtGui, QtCore
-
 from TextEdit import Editor
+
 from core import catch_local_vars
 
 
@@ -46,10 +46,12 @@ class MainWindow(QtGui.QMainWindow):
 
 
 def main():
-
     app = QtGui.QApplication(sys.argv)
+
     ex = MainWindow()
     ex.show()
+
+
     sys.exit(app.exec_())
 
 
