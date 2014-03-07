@@ -19,7 +19,6 @@ class SimpleTextEdit(QtGui.QTextEdit):
             self.indent()
             return True
 
-
         return super(SimpleTextEdit, self).keyPressEvent(event)
 
     def add_ener_callback(self, callback):
@@ -30,21 +29,28 @@ class SimpleTextEdit(QtGui.QTextEdit):
         return super(SimpleTextEdit, self).keyReleaseEvent(event)
 
     def indent(self):
+        line_number = self.textCursor().blockNumber()
         text = self.toPlainText()
         lines = text.split('\n')
         if len(lines) < 1:
             return
-        last_line = lines[-1]
+        last_line = lines[line_number]
         start_space_count = len(last_line) - len(last_line.lstrip())
         if len(last_line) > 0 and last_line[-1] == ':':
             start_space_count += 4
-        self.append(' ' * start_space_count)
+        lines.insert(line_number + 1, ' ' * start_space_count)
+        self.setText('\n'.join(lines))
+        for i in xrange(line_number + 1):
+            self.moveCursor(QtGui.QTextCursor.MoveOperation.Down)
+        self.moveCursor(QtGui.QTextCursor.MoveOperation.EndOfLine)
+
 
 
 def main():
 
     app = QtGui.QApplication(sys.argv)
     ex = SimpleTextEdit()
+    ex.show()
     sys.exit(app.exec_())
 
 
