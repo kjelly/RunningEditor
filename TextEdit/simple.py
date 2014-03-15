@@ -7,26 +7,16 @@ class SimpleTextEdit(QtGui.QTextEdit):
     def __init__(self):
         super(SimpleTextEdit, self).__init__()
         self.initUI()
-        self.key_enter_callback_list = []
 
     def initUI(self):
         self.setText("")
 
     def keyPressEvent(self, event):
         if event.key() in [QtCore.Qt.Key_Enter, QtCore.Qt.Key_Return]:
-            for callback in self.key_enter_callback_list:
-                callback()
             self.indent()
             return True
 
         return super(SimpleTextEdit, self).keyPressEvent(event)
-
-    def add_ener_callback(self, callback):
-        self.key_enter_callback_list.append(callback)
-
-    def keyReleaseEvent(self, event):
-
-        return super(SimpleTextEdit, self).keyReleaseEvent(event)
 
     def indent(self):
         line_number = self.textCursor().blockNumber()
@@ -43,7 +33,6 @@ class SimpleTextEdit(QtGui.QTextEdit):
         for i in xrange(line_number + 1):
             self.moveCursor(QtGui.QTextCursor.MoveOperation.Down)
         self.moveCursor(QtGui.QTextCursor.MoveOperation.EndOfLine)
-
 
 
 def main():

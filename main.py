@@ -1,7 +1,8 @@
 import sys
 from PySide import QtGui, QtCore
 from TextEdit import Editor
-
+from multiprocessing import Queue, Process
+import threading
 from core import catch_local_vars
 
 
@@ -10,9 +11,16 @@ class MainWindow(QtGui.QMainWindow):
         super(MainWindow, self).__init__()
 
         self.main_editor = Editor()
-        self.main_editor.add_ener_callback(self.catch_local_vars)
         self.setCentralWidget(self.main_editor)
         self.createDockWindows()
+        self.timer = QtCore.QTimer()
+
+        self.process = None
+        self.process_queue = None
+        self.count = 0
+        self.lock = threading.RLock()
+        self.timer.timeout.connect(self.catch_local_vars)
+        self.timer.start(2000)
 
     def createDockWindows(self):
         self.test_code_docker = QtGui.QDockWidget("Test Code", self)
@@ -35,16 +43,48 @@ class MainWindow(QtGui.QMainWindow):
         self.addDockWidget(QtCore.Qt.RightDockWidgetArea, self.error_docker)
 
     def catch_local_vars(self):
-        line_numbere = self.main_editor.textCursor().blockNumber()
-        code = self.main_editor.toPlainText()
-        env, local_vars, err = catch_local_vars(code, stop=line_numbere)
-        if err:
-            self.error_view.setText(str(err))
+        if not self.lock.acquire(False):
+            return
+        print 'timeout'
+        if self.process is None:
+            self.count = 0
+            line_number = self.main_editor.textCursor().blockNumber()
+            code = self.main_editor.toPlainText()
+            test_code = self.test_code_editor.toPlainText()
+            self.process_queue = Queue()
+            self.process = Process(target=self.asyn_catch_local_vars,
+                                   args=(self.process_queue, code, test_code,
+                                         line_number))
+            self.process.start()
+
+        if self.process.is_alive():
+            self.count += 1
         else:
-            code = self.test_code_editor.toPlainText()
-            env, local_vars, err = catch_local_vars(code, env=env)
-            self.error_view.setText(str(err))
-            self.local_vars_view.setText(str(local_vars))
+            try:
+                err = self.process_queue.get_nowait()
+                local_vars_info = self.process_queue.get_nowait()
+                self.error_view.setText(str(err))
+                self.local_vars_view.setText(str(local_vars_info))
+                self.count = 0
+            except Exception as e:
+                print str(e)
+                self.process.terminate()
+                self.process = None
+                self.count = 0
+        if self.count > 2:
+            self.process.terminate()
+            self.process = None
+        self.lock.release()
+
+    def asyn_catch_local_vars(self, output, code, test_code, line_number):
+        env, local_vars, err = catch_local_vars(code, stop=line_number)
+        if err:
+            output.put(str(err))
+            output.put('')
+            return
+        env, local_vars, err = catch_local_vars(test_code, env=env)
+        output.put(str(err))
+        output.put(str(local_vars))
 
 
 def main():
