@@ -25,6 +25,9 @@ from pyqode.python.panels import QuickDocPanel
 class RichTextEdit(pyqode.core.QCodeEdit):
     def __init__(self):
         super(RichTextEdit, self).__init__()
+        self.setLineWrapMode(self.NoWrap)
+        self.installPanel(pyqode.core.LineNumberPanel(),
+                          pyqode.core.PanelPosition.LEFT)
 
         self.installMode(pyqode.core.ZoomMode())
         #self.installMode(pyqode.core.FileWatcherMode())
